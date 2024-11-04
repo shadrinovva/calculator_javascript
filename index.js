@@ -44,6 +44,8 @@ plus_minus.addEventListener('click', () => {
     let value = inputHolder.value;
     if (parseFloat(value) > 0) {
         value = '-' + value;
+    } else if (parseFloat(value) === 0) {
+        value = 0;
     } else {
         value = value.slice(1);
     }
@@ -58,23 +60,31 @@ percent.addEventListener('click', () => {
     }
 })
 
-function counter_point(string) {
-    let cnt = 0;
-    for (let i = 0; i < string.length; i++) {
-        if (string[i] === '.') {
-            cnt++;
-        }
-    }
-    return cnt;
-}
-
 point.addEventListener('click', () => {
-    let value = inputHolder.value;
-    if (value[value.length - 1] != '.' && counter_point(inputHolder.value) < 1) {
-        value = value + '.';
-        inputHolder.value = value;
+    if (new_value === '') {
+        new_value = inputHolder.value || '0';
     }
-})
+    if (!new_value.includes('.')) {
+        new_value += '.';
+        inputHolder.value = new_value; 
+    }
+});
+
+let hasStartedInput = false; 
+inputHolder.addEventListener('keydown', (event) => {
+    if (!hasStartedInput && event.key >= '0' && event.key <= '9') {
+        inputHolder.value = '';
+        hasStartedInput = true; 
+    }
+});
+
+inputHolder.addEventListener('input', (event) => {
+    let value = event.target.value;
+    if (!/^\d*\.?\d*$/.test(value)) {
+        event.target.value = value.slice(0, -1); 
+    }
+});
+
 
 let numbers = document.querySelectorAll('button.num');
 
@@ -90,6 +100,12 @@ let a = parseFloat(inputHolder.value), b, new_value = '', operation;
 plus.addEventListener('click', () => {
     plus.style.backgroundColor = 'white';
     plus.style.color = 'orange';
+    multiply.style.backgroundColor = 'orange';
+    multiply.style.color = 'white';
+    division.style.backgroundColor = 'orange';
+    division.style.color = 'white';
+    minus.style.backgroundColor = 'orange';
+    minus.style.color = 'white';
     a = parseFloat(inputHolder.value);
     new_value = '';
     operation = '+'
@@ -112,6 +128,14 @@ numbers.forEach(element => {
 });
 
 equal.addEventListener('click', () => {
+    plus.style.backgroundColor = 'orange';
+        plus.style.color = 'white';
+        minus.style.backgroundColor = 'orange';
+        minus.style.color = 'white';
+        multiply.style.backgroundColor = 'orange';
+        multiply.style.color = 'white';
+        division.style.backgroundColor = 'orange';
+        division.style.color = 'white';
     equal.style.backgroundColor = '#f9d08f';
     setTimeout(() => {
         equal.style.backgroundColor = ''; 
@@ -124,7 +148,11 @@ equal.addEventListener('click', () => {
     } else if (operation === '*') {
         inputHolder.value = (a * b);
     } else if (operation === '/') {
-        inputHolder.value = (a / b);
+        if (b === 0) {
+            inputHolder.value = "Ошибка";
+        } else {
+            inputHolder.value = (a / b);
+        }
     }
 
     new_value = '';
@@ -133,6 +161,12 @@ equal.addEventListener('click', () => {
 minus.addEventListener('click', () => {
     minus.style.backgroundColor = 'white';
     minus.style.color = 'orange';
+    multiply.style.backgroundColor = 'orange';
+    multiply.style.color = 'white';
+    division.style.backgroundColor = 'orange';
+    division.style.color = 'white';
+    plus.style.backgroundColor = 'orange';
+    plus.style.color = 'white';
     a = parseFloat(inputHolder.value);
     new_value = '';
     operation = '-'
@@ -141,6 +175,12 @@ minus.addEventListener('click', () => {
 multiply.addEventListener('click', () => {
     multiply.style.backgroundColor = 'white';
     multiply.style.color = 'orange';
+    division.style.backgroundColor = 'orange';
+    division.style.color = 'white';
+    minus.style.backgroundColor = 'orange';
+    minus.style.color = 'white';
+    plus.style.backgroundColor = 'orange';
+    plus.style.color = 'white';
     a = parseFloat(inputHolder.value);
     new_value = '';
     operation = '*'
@@ -149,6 +189,12 @@ multiply.addEventListener('click', () => {
 division.addEventListener('click', () => {
     division.style.backgroundColor = 'white';
     division.style.color = 'orange';
+    multiply.style.backgroundColor = 'orange';
+    multiply.style.color = 'white';
+    minus.style.backgroundColor = 'orange';
+    minus.style.color = 'white';
+    plus.style.backgroundColor = 'orange';
+    plus.style.color = 'white';
     a = parseFloat(inputHolder.value);
     new_value = '';
     operation = '/'
